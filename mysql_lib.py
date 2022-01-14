@@ -2,19 +2,19 @@ import mysql.connector
 
 """ Utilitaires pour gérer une db mariadb """
 class mysql_database():
-	def __init__(self, db_name, db_server, db_port=3306, db_user="admin", db_password=""):
+	def __init__(self, db_name, db_server, db_user="admin", db_password=""):
 		self.db = None
 		self.cursor = None
 		self.database = db_name
 		self.host = db_server
-		self.port = db_port
+		# self.port = db_port
 		self.user = db_user
 		self.password = db_password
 
 
 	def connect(self):
 		""" Connexion à la DB """
-		self.db = mysql.connector.connect(host = self.host, port = self.port, database = self.database, user = self.user, password = self.password)
+		self.db = mysql.connector.connect(host = self.host, database = self.database, user = self.user, password = self.password)
 		if self.db is None:
 			return False
 		else:
