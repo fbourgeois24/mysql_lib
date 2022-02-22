@@ -49,13 +49,15 @@ class mysql_database():
 		""" Méthode qui met à jour la db """
 		self.db.commit()
 		
-	def exec(self, query, params = None, fetch = "all"):
+	def exec(self, query, params = None, fetch = "all", autoconnect = True):
 		""" Méthode pour exécuter une requête et qui ouvre et ferme  la db automatiquement """
 		# Détermination du renvoi d'info ou non
 		if not "SELECT" in query[:20]:
 			commit = True
 		else:
 			commit = False
+		if autoconnect:
+			self.connect()
 		if self.open():
 			self.cursor.execute(query, params)
 			# Si pas de commit ce sera une récupération
@@ -66,16 +68,19 @@ class mysql_database():
 					value = self.fetchone()
 				elif fetch == "single":
 					# On essaie de prendre le premier mais si ça échoue c'est probablement que la requête n'a rien retourné
-					try:
-						value = self.fetchone()[0]
-					except:
-						value = None
+					value = self.fetchone()
+					if value is not None:
+						value = value[0]
 				else:
 					raise ValueError("Wrong fetch type")
 				self.close()
+				if autoconnect:
+					self.disconnect()
 				return value
 			else:
 				self.close(commit=commit)
+				if autoconnect:
+					self.disconnect()
 		else:
 			raise AttributeError("Erreur de création du curseur pour l'accès à la db")
 
