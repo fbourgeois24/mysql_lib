@@ -64,6 +64,8 @@ class mysql_database():
 					value = self.fetchall()
 				elif fetch == "one":
 					value = self.fetchone()
+					# On vide le curseur pour éviter l'erreur de data restantes à la fermeture
+					trash = self.fetchall()
 				elif fetch == "single":
 					# On essaie de prendre le premier mais si ça échoue c'est probablement que la requête n'a rien retourné
 					try:
