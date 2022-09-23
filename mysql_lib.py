@@ -2,7 +2,7 @@ import mysql.connector
 
 """ Utilitaires pour gérer une db mariadb """
 class mysql_database():
-	def __init__(self, db_name, db_server, db_user="admin", db_password=""):
+	def __init__(self, db_name=None, db_server=None, db_user="admin", db_password="", config=None):
 		self.db = None
 		self.cursor = None
 		self.database = db_name
@@ -10,6 +10,13 @@ class mysql_database():
 		# self.port = db_port
 		self.user = db_user
 		self.password = db_password
+
+		if config is not None:
+			self.database = config.get("name")
+			self.host = config.get("addr")
+			# self.port = config.get("port")
+			self.user = config.get("user")
+			self.password = config.get("passwd")
 
 
 	def connect(self):
@@ -94,6 +101,15 @@ class mysql_database():
 	def fetchone(self):
 		""" Méthode pour le fetchone """
 		return self.cursor.fetchone()
+
+	def __enter__(self):
+		""" Ouverture avec with """
+		self.connect()
+		return self
+
+	def __exit__(self, *args, **kwargs):
+		""" Fermeture avec with """
+		self.disconnect()
 
 # # Test
 # if __name__ == "__main__":
