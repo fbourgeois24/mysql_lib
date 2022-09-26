@@ -1,4 +1,4 @@
-import mysql.connector
+import mysql.connector # Install with 'pip install mysql-connector-python'
 
 """ Utilitaires pour gérer une db mariadb """
 class mysql_database():
